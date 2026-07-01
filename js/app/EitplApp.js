@@ -142,7 +142,7 @@ export class EitplApp {
 
     const last = this.#resultView.lastResult;
     if (last) {
-      this.#handleResult(last.score, last.level, false);
+      this.#handleResult(last.score, last.level, { shared: false });
     }
   }
 
