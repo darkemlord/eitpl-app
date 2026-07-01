@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0f1117"/>
+  <rect x="40" y="40" width="1120" height="550" rx="24" fill="none" stroke="#f97316" stroke-width="4"/>
+  <circle cx="600" cy="240" r="80" fill="#f97316" opacity="0.15"/>
+  <text x="600" y="270" text-anchor="middle" fill="#f97316" font-family="Inter,Arial,sans-serif" font-size="96" font-weight="800">4</text>
+  <text x="600" y="360" text-anchor="middle" fill="#e0e2e7" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="700">EITPL</text>
+  <text x="600" y="420" text-anchor="middle" fill="#908fa0" font-family="Inter,Arial,sans-serif" font-size="28">Escala Internacional de Tocada de Pelotas Laboral</text>
+</svg>

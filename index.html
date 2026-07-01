@@ -7,6 +7,11 @@
   <meta property="og:title" content="EITPL — Escala Internacional de Tocada de Pelotas Laboral">
   <meta property="og:description" content="Descubrí tu nivel. Compartí tu diagnóstico. Renunciá el viernes con gafas oscuras.">
   <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/og/default.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="EITPL — Escala Internacional de Tocada de Pelotas Laboral">
+  <meta name="twitter:description" content="Descubrí tu nivel. Compartí tu diagnóstico. Renunciá el viernes con gafas oscuras.">
+  <meta name="twitter:image" content="assets/og/default.svg">
   <title>EITPL — Escala Internacional de Tocada de Pelotas Laboral</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -81,6 +86,12 @@
           <p class="section-subtitle" data-i18n="quiz.subtitle">Respondé con honestidad brutal. Tu psicólogo no va a ver esto.</p>
         </div>
         <form id="quiz-form" novalidate>
+          <div class="quiz-progress" aria-live="polite">
+            <div class="quiz-progress-track">
+              <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+            </div>
+            <span class="quiz-progress-label" id="quiz-progress-label">0 de 11 respondidas</span>
+          </div>
           <div id="questions-container" class="questions-container"></div>
           <div class="quiz-actions">
             <button type="submit" class="btn btn-primary btn-xl" id="btn-submit" data-i18n="quiz.submit">
@@ -96,6 +107,7 @@
     <section id="result" class="result-section" hidden aria-live="polite">
       <div class="container container-narrow">
         <div class="result-card card-surface" id="result-card">
+          <p class="result-shared-banner" id="result-shared-banner" hidden></p>
           <div class="result-status" data-i18n="result.status">Diagnóstico finalizado</div>
           <div class="result-score-display">
             <span class="result-score-big" id="result-score-value">0</span>
@@ -106,9 +118,17 @@
           <p class="result-message" id="result-message"></p>
           <p class="result-action" id="result-action"></p>
           <div class="result-actions">
+            <button type="button" class="btn btn-primary" id="btn-whatsapp" data-i18n="result.shareWhatsApp">
+              <span class="material-symbols-outlined" aria-hidden="true">chat</span>
+              WhatsApp
+            </button>
             <button type="button" class="btn btn-primary" id="btn-share" data-i18n="result.share">
-              <span class="material-symbols-outlined" aria-hidden="true">share</span>
-              Compartir mi resultado
+              <span class="material-symbols-outlined" aria-hidden="true">link</span>
+              Copiar enlace
+            </button>
+            <button type="button" class="btn btn-secondary" id="btn-certificate" data-i18n="result.downloadCert">
+              <span class="material-symbols-outlined" aria-hidden="true">download</span>
+              Descargar certificado
             </button>
             <button type="button" class="btn btn-secondary" id="btn-retry" data-i18n="result.retry">
               <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
@@ -155,6 +175,6 @@
     </div>
   </footer>
 
-  <script src="app.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
