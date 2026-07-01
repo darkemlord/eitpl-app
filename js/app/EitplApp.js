@@ -141,6 +141,7 @@ export class EitplApp {
     this.#bindNavigation();
     this.#bindLanguageSwitcher();
     this.#bindResultActions();
+    this.#bindQuizActions();
     this.#modePicker.render();
     this.#modePicker.bind();
     this.#quizController.bind(document.getElementById("questions-container"));
@@ -294,6 +295,16 @@ export class EitplApp {
       this.#poolService.resetSession();
       this.#storage.clearAnswers();
       this.#showModePicker();
+    });
+  }
+
+  #bindQuizActions() {
+    document.getElementById("btn-cancel-quiz")?.addEventListener("click", () => {
+      this.#poolService.resetSession();
+      this.#storage.clearAnswers();
+      this.#currentMode = null;
+      this.#showModePicker();
+      document.getElementById("quiz")?.scrollIntoView({ behavior: "smooth" });
     });
   }
 }
