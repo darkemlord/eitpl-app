@@ -12,11 +12,11 @@ export class QuizValidator {
     this.#questions = questions;
   }
 
-  collectFromDom() {
+  collectFromDom(questions = this.#questions) {
     const answers = {};
     let allAnswered = true;
 
-    for (const q of this.#questions) {
+    for (const q of questions) {
       const selected = document.querySelector(`input[name="${q.id}"]:checked`);
       if (!selected) {
         allAnswered = false;

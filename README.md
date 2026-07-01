@@ -21,7 +21,7 @@ recarga tal cual con un refresh de la página.
 ## Tests
 
 ```bash
-npm run test:unit   # unit tests (node --test): ScoringEngine, QuizValidator, ResultUrlService
+npm run test:unit   # unit tests (node --test): ScoringEngine, QuestionPoolService, QuizValidator, QuizCarousel, ResultUrlService
 npm run test:e2e    # Playwright: flujo completo en navegador (requiere Chrome instalado)
 npm test            # unit + e2e
 ```
@@ -50,16 +50,23 @@ assets/og/              # imágenes Open Graph por nivel
 ## Cómo funciona el quiz
 
 - Pool de 100 preguntas (`js/config/pool/meta.js`), cada una con peso 1/2/3.
-- Cada sesión toma 10 preguntas al azar, sin IDs fijos, respetando una mezcla de
-  severidad de 4 graves + 4 moderadas + 2 leves (siempre suma 22). Esto garantiza
-  que el puntaje máximo sea siempre **22** y que ninguna sesión sea "más fácil"
-  que otra, sin importar qué preguntas random te toquen.
+- Tres modos a elegir antes de arrancar: **Express** (10 preguntas, ~2 min),
+  **Normal** (20, ~4 min) y **Detallado** (30, ~6 min). Ninguna pregunta está
+  anclada por ID en ningún modo — cada sesión es 100% al azar, respetando una
+  mezcla de severidad de 4 graves + 4 moderadas + 2 leves cada 10 preguntas
+  (el máximo teórico escala igual: 22/44/66).
+- Porque el máximo cambia según el modo, el resultado se muestra **en
+  porcentaje** (no en puntaje crudo), así es comparable sin importar qué modo
+  hayas elegido.
+- Las preguntas se responden en un carrusel paso a paso (1 por paso en mobile,
+  3 en desktop), con botones Anterior/Siguiente. El último paso cambia el botón
+  a "Calcular mi nivel".
 - El resultado (mensaje + acción recomendada) también varía: cada nivel tiene
   varias versiones y se elige una al azar en cada diagnóstico, para que no te
   salga siempre el mismo chiste.
-- El resultado es compartible por URL (`?l=&s=&lang=&m=`), por WhatsApp o como
-  certificado PNG descargable — el link compartido reproduce el mismo chiste
-  que vio la persona que lo mandó.
+- El resultado es compartible por URL (`?l=&s=&lang=&mode=&m=`), por WhatsApp o
+  como certificado PNG descargable — el link compartido reproduce el mismo
+  modo y el mismo chiste que vio la persona que lo mandó.
 
 ## Deploy
 

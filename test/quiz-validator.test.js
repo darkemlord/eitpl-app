@@ -40,6 +40,20 @@ test("collectFromDom: flags allAnswered false and omits unanswered questions", (
   assert.equal(allAnswered, false);
 });
 
+test("collectFromDom: scoping to a subset validates only those questions (carousel batch), ignoring the rest of the session", () => {
+  // Only q002's card is mounted, simulating a carousel step showing one question
+  // out of a larger session — the other two questions simply aren't in the DOM.
+  const dom = new JSDOM(`<!doctype html><html><body>${questionCard("q002", "yes")}</body></html>`);
+  globalThis.window = dom.window;
+  globalThis.document = dom.window.document;
+
+  const validator = new QuizValidator(QUESTIONS);
+  const { answers, allAnswered } = validator.collectFromDom([QUESTIONS[1]]);
+
+  assert.deepEqual(answers, { q002: "yes" });
+  assert.equal(allAnswered, true);
+});
+
 test("markInvalid: toggles invalid/unanswered only on cards missing an answer", () => {
   mountQuestions({ q001: "yes" });
   const validator = new QuizValidator(QUESTIONS);

@@ -1,14 +1,29 @@
 /** @readonly */
 export const POOL_SIZE = 100;
-export const QUIZ_LENGTH = 10;
 
 /**
- * Weight slots for the 10 session questions (sum = 22, matches MAX_SCORE).
- * No fixed question IDs — the balance is by severity tier, not by identity,
- * so every session pulls fresh questions while staying comparable to others.
+ * Three depth modes. No fixed question IDs in any of them — the severity mix
+ * (see buildSeverityMix) is what stays constant, not question identity, so
+ * every session pulls fresh questions while staying comparable to others of
+ * the same mode.
  */
-export const SESSION_SLOTS = [3, 3, 3, 3, 2, 2, 2, 2, 1, 1];
-export const SESSION_WEIGHT_BUDGET = SESSION_SLOTS.reduce((sum, w) => sum + w, 0);
+export const QUIZ_MODES = {
+  express: { id: "express", length: 10 },
+  normal: { id: "normal", length: 20 },
+  detailed: { id: "detailed", length: 30 },
+};
+
+const BASE_SEVERITY_MIX = { 3: 4, 2: 4, 1: 2 }; // per 10 questions, sums to 22 points
+
+/** Weight slots for a session of `length` questions (scales BASE_SEVERITY_MIX). */
+export function buildSeverityMix(length) {
+  const unit = length / 10;
+  return [
+    ...Array(BASE_SEVERITY_MIX[3] * unit).fill(3),
+    ...Array(BASE_SEVERITY_MIX[2] * unit).fill(2),
+    ...Array(BASE_SEVERITY_MIX[1] * unit).fill(1),
+  ];
+}
 
 /**
  * @type {ReadonlyArray<{ id: string, weight: 1|2|3, category: string, tags?: string[] }>}

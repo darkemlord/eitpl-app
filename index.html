@@ -100,22 +100,34 @@
     </section>
 
     <section id="quiz" class="quiz-section">
-      <div class="container container-narrow">
+      <div class="container">
         <div class="section-heading">
           <h2 class="section-title section-title-lg" data-i18n="quiz.title">Diagnóstico EITPL</h2>
           <p class="section-subtitle" data-i18n="quiz.subtitle">Respondé con honestidad brutal. Tu psicólogo no va a ver esto.</p>
         </div>
-        <form id="quiz-form" novalidate>
+
+        <div class="mode-picker" id="mode-picker">
+          <div class="section-heading">
+            <h3 class="section-title" data-i18n="quiz.modePicker.title">Elegí tu modo</h3>
+            <p class="section-subtitle" data-i18n="quiz.modePicker.subtitle">Más preguntas, diagnóstico más específico.</p>
+          </div>
+          <div class="mode-picker-grid" id="mode-picker-grid"></div>
+        </div>
+
+        <form id="quiz-form" novalidate hidden>
           <div class="quiz-progress" aria-live="polite">
             <div class="quiz-progress-track">
               <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
             </div>
-            <span class="quiz-progress-label" id="quiz-progress-label">0 de 10 respondidas</span>
+            <span class="quiz-progress-label" id="quiz-progress-label">Paso 1 de 10</span>
           </div>
           <div id="questions-container" class="questions-container"></div>
           <div class="quiz-actions">
-            <button type="submit" class="btn btn-primary btn-xl" id="btn-submit" data-i18n="quiz.submit">
-              Calcular mi nivel
+            <button type="button" class="btn btn-secondary btn-xl" id="btn-prev" data-i18n="quiz.prev" hidden>
+              Anterior
+            </button>
+            <button type="submit" class="btn btn-primary btn-xl" id="btn-submit">
+              <span id="btn-submit-label" data-i18n="quiz.submit">Calcular mi nivel</span>
               <span class="material-symbols-outlined" aria-hidden="true">calculate</span>
             </button>
             <p class="quiz-hint" id="quiz-hint" data-i18n="quiz.hint" hidden></p>
@@ -130,8 +142,8 @@
           <p class="result-shared-banner" id="result-shared-banner" hidden></p>
           <div class="result-status" data-i18n="result.status">Diagnóstico finalizado</div>
           <div class="result-score-display">
-            <span class="result-score-big" id="result-score-value">0</span>
-            <span class="result-score-max" data-i18n="result.scoreMax">/22</span>
+            <span class="result-score-big" id="result-score-value">0%</span>
+            <span class="result-score-max" id="result-mode-label"></span>
           </div>
           <h2 class="result-level" id="result-level"></h2>
           <p class="result-name" id="result-name"></p>

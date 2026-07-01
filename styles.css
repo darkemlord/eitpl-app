@@ -65,6 +65,12 @@ body[lang="ja"] {
   line-height: 1.7;
 }
 
+/* Author rules like `.btn { display: inline-flex }` otherwise win over the
+   UA default for [hidden], since author styles always beat UA styles. */
+[hidden] {
+  display: none !important;
+}
+
 img {
   max-width: 100%;
 }
@@ -593,6 +599,59 @@ img {
   letter-spacing: 0.05em;
 }
 
+/* ── Mode picker ── */
+.mode-picker {
+  margin-bottom: 3rem;
+}
+
+.mode-picker-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  max-width: 1100px;
+  margin-inline: auto;
+}
+
+.mode-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-radius: var(--radius-xl);
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.mode-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.mode-card-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.mode-card-desc {
+  font-size: 0.9rem;
+  color: var(--text-variant);
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+.mode-card-meta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+
+.mode-card-cta {
+  width: 100%;
+}
+
 /* ── Quiz ── */
 .quiz-progress {
   margin-bottom: 1.5rem;
@@ -774,11 +833,17 @@ img {
 }
 
 .quiz-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
   text-align: center;
 }
 
 .quiz-hint {
-  margin-top: 1rem;
+  flex-basis: 100%;
+  margin-top: 0.5rem;
   color: #ef4444;
   font-size: 0.875rem;
 }
@@ -846,7 +911,11 @@ img {
 }
 
 .result-score-max {
-  font-size: 1.5rem;
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
   color: var(--text-variant);
   font-weight: 400;
 }
@@ -1062,35 +1131,17 @@ img {
     display: inline-flex;
   }
 
-  .question-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1.25rem;
+  /* Carousel shows up to 3 questions per step on desktop — cards stay in
+     their stacked (mobile) internal layout since each one is narrower here
+     than the old single-column full-width design. */
+  .mode-picker-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 
-  .question-number {
-    flex-shrink: 0;
-  }
-
-  .question-body {
-    flex: 1;
-  }
-
-  .options-group {
-    display: flex;
-    flex-wrap: nowrap;
-    flex-shrink: 0;
-    width: auto;
-    grid-template-columns: unset;
-  }
-
-  .option-pill {
-    display: inline-flex;
-    width: auto;
-    min-height: auto;
-    padding: 0.5rem 1.1rem;
-    font-size: 0.75rem;
+  .questions-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    align-items: start;
   }
 }
 

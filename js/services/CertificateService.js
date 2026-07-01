@@ -71,7 +71,7 @@ export class CertificateService {
 
     ctx.fillStyle = "#6366f1";
     ctx.font = "800 48px Inter, system-ui, sans-serif";
-    ctx.fillText(`${result.score}${this.#i18n.t("result.scoreMax")}`, w / 2, 780);
+    ctx.fillText(`${result.percentage}%`, w / 2, 780);
 
     if (result.level === 5) {
       ctx.fillStyle = "#fbbf24";

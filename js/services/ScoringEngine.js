@@ -1,5 +1,3 @@
-import { MAX_SCORE } from "../config/constants.js";
-
 /**
  * Pure scoring logic — no DOM, no i18n (SRP + testable).
  */
@@ -21,7 +19,7 @@ export class ScoringEngine {
   }
 
   get maxScore() {
-    return MAX_SCORE;
+    return this.#questions.reduce((sum, q) => sum + q.weight, 0);
   }
 
   scoreAnswer(weight, value) {
@@ -37,10 +35,18 @@ export class ScoringEngine {
     );
   }
 
-  levelFromScore(score) {
+  levelFromPercentage(percentage) {
     for (let i = 0; i < this.#thresholds.length; i++) {
-      if (score <= this.#thresholds[i]) return i + 1;
+      if (percentage <= this.#thresholds[i]) return i + 1;
     }
     return this.#thresholds.length;
+  }
+
+  /** Single entry point: raw score, max possible, percentage and resulting level. */
+  evaluate(answers) {
+    const score = this.calculate(answers);
+    const maxScore = this.maxScore;
+    const percentage = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
+    return { score, maxScore, percentage, level: this.levelFromPercentage(percentage) };
   }
 }

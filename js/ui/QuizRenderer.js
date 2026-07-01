@@ -20,7 +20,7 @@ export class QuizRenderer {
     this.#questions = questions;
   }
 
-  render() {
+  render(startIndex = 0) {
     const opts = this.#i18n.t("quiz.options");
     const saved = this.#storage.getAnswers();
 
@@ -34,7 +34,7 @@ export class QuizRenderer {
 
       card.innerHTML = `
         <div class="question-row">
-          <div class="question-number" aria-hidden="true">${this.#padNum(i + 1)}</div>
+          <div class="question-number" aria-hidden="true">${this.#padNum(startIndex + i + 1)}</div>
           <div class="question-body">
             <span class="severity-badge severity-badge--${tier}">
               ${this.#i18n.t("quiz.severityPrefix")} ${this.#i18n.severityLabel(q.weight)}

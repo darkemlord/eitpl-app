@@ -1,7 +1,6 @@
 import { TRANSLATIONS } from "../config/i18n.js";
-import { THRESHOLDS, STATS } from "../config/constants.js";
+import { PERCENT_THRESHOLDS, STATS } from "../config/constants.js";
 import { POOL_TEXTS } from "../config/pool/texts.js";
-import { QUIZ_LENGTH } from "../config/pool/meta.js";
 import { StorageService } from "../services/StorageService.js";
 import { TranslationService } from "../services/TranslationService.js";
 import { ScoringEngine } from "../services/ScoringEngine.js";
@@ -15,6 +14,8 @@ import { StatsService } from "../services/StatsService.js";
 import { I18nBinder } from "../ui/I18nBinder.js";
 import { LevelsRenderer } from "../ui/LevelsRenderer.js";
 import { QuizRenderer } from "../ui/QuizRenderer.js";
+import { QuizCarousel } from "../ui/QuizCarousel.js";
+import { ModePicker } from "../ui/ModePicker.js";
 import { ResultView } from "../ui/ResultView.js";
 import { HeaderController } from "../ui/HeaderController.js";
 import { QuizProgressBar } from "../ui/QuizProgressBar.js";
@@ -32,6 +33,8 @@ export class EitplApp {
   #validator;
   #levelsRenderer;
   #quizRenderer;
+  #carousel;
+  #modePicker;
   #resultView;
   #shareService;
   #resultUrl;
@@ -44,16 +47,15 @@ export class EitplApp {
   #statsView;
   #statsTimer;
   #poolService;
-  #sessionQuestions;
+  #currentMode = null;
 
   constructor() {
     this.#storage = new StorageService();
     this.#poolService = new QuestionPoolService();
-    this.#sessionQuestions = this.#poolService.getSessionQuestions();
     this.#i18n = new TranslationService(TRANSLATIONS, POOL_TEXTS, this.#storage.getLanguage());
     this.#i18nBinder = new I18nBinder(this.#i18n);
-    this.#scoring = new ScoringEngine(this.#sessionQuestions, THRESHOLDS);
-    this.#validator = new QuizValidator(this.#sessionQuestions);
+    this.#scoring = new ScoringEngine([], PERCENT_THRESHOLDS);
+    this.#validator = new QuizValidator([]);
     this.#resultUrl = new ResultUrlService();
     this.#meta = new MetaTagService();
 
@@ -64,9 +66,17 @@ export class EitplApp {
 
     this.#quizRenderer = new QuizRenderer(
       document.getElementById("questions-container"),
-      this.#sessionQuestions,
+      [],
       this.#i18n,
       this.#storage
+    );
+
+    this.#carousel = new QuizCarousel(this.#quizRenderer);
+
+    this.#modePicker = new ModePicker(
+      document.getElementById("mode-picker-grid"),
+      this.#i18n,
+      (modeId) => this.#startQuiz(modeId)
     );
 
     this.#resultView = new ResultView(
@@ -78,6 +88,7 @@ export class EitplApp {
         resultMessage: document.getElementById("result-message"),
         resultAction: document.getElementById("result-action"),
         resultScoreValue: document.getElementById("result-score-value"),
+        resultModeLabel: document.getElementById("result-mode-label"),
         sharedBanner: document.getElementById("result-shared-banner"),
       },
       this.#i18n
@@ -94,25 +105,26 @@ export class EitplApp {
     this.#progressBar = new QuizProgressBar({
       fillEl: document.getElementById("quiz-progress-fill"),
       labelEl: document.getElementById("quiz-progress-label"),
-      total: QUIZ_LENGTH,
       translationService: this.#i18n,
     });
 
     this.#quizController = new QuizController({
       form: document.getElementById("quiz-form"),
       hint: document.getElementById("quiz-hint"),
+      submitLabel: document.getElementById("btn-submit-label"),
+      prevBtn: document.getElementById("btn-prev"),
       validator: this.#validator,
       scoringEngine: this.#scoring,
       storageService: this.#storage,
-      resultView: this.#resultView,
-      quizRenderer: this.#quizRenderer,
+      carousel: this.#carousel,
+      translationService: this.#i18n,
       onSubmit: (payload) =>
-        this.#handleResult(payload.score, payload.level, {
+        this.#handleResult(payload.percentage, payload.level, this.#currentMode, {
           shared: false,
           recordStats: true,
           submissionId: payload.submissionId,
         }),
-      onChange: (count) => this.#progressBar.update(count),
+      onStepChange: (step, total) => this.#progressBar.update(step, total),
     });
 
     this.#headerController = new HeaderController(document.getElementById("site-header"));
@@ -129,10 +141,18 @@ export class EitplApp {
     this.#bindNavigation();
     this.#bindLanguageSwitcher();
     this.#bindResultActions();
+    this.#modePicker.render();
+    this.#modePicker.bind();
     this.#quizController.bind(document.getElementById("questions-container"));
-    this.#restoreFromUrl();
     this.#loadStats();
     this.#statsTimer = setInterval(() => this.#loadStats(), STATS.refreshMs);
+
+    const restoredResult = this.#restoreFromUrl();
+    if (!restoredResult) {
+      const storedMode = this.#poolService.getStoredMode();
+      if (storedMode) this.#startQuiz(storedMode);
+      else this.#showModePicker();
+    }
   }
 
   setLanguage(lang) {
@@ -142,7 +162,10 @@ export class EitplApp {
 
     const last = this.#resultView.lastResult;
     if (last) {
-      this.#handleResult(last.score, last.level, { shared: false, variantIndex: last.variantIndex });
+      this.#handleResult(last.percentage, last.level, last.mode, {
+        shared: false,
+        variantIndex: last.variantIndex,
+      });
     }
   }
 
@@ -150,20 +173,41 @@ export class EitplApp {
     document.body.lang = lang;
     this.#i18nBinder.applyDocument();
     this.#levelsRenderer.render();
-    this.#quizRenderer.render();
-    this.#progressBar.update(Object.keys(this.#storage.getAnswers()).length);
+    this.#modePicker.render();
+    this.#carousel.refresh();
+    this.#progressBar.update(this.#carousel.currentStep, this.#carousel.totalSteps);
     this.#statsView.refreshLabels();
   }
 
-  #handleResult(score, level, { shared = false, recordStats = false, submissionId = "", variantIndex } = {}) {
-    this.#resultView.show(score, level, { shared, variantIndex });
+  #startQuiz(modeId, forceNew = false) {
+    const questions = this.#poolService.getSessionQuestions(modeId, forceNew);
+    this.#currentMode = modeId;
+    this.#scoring.setQuestions(questions);
+    this.#validator.setQuestions(questions);
+    this.#carousel.init(questions);
+    this.#quizController.start();
+    this.#showCarousel();
+  }
+
+  #showModePicker() {
+    document.getElementById("mode-picker").hidden = false;
+    document.getElementById("quiz-form").hidden = true;
+  }
+
+  #showCarousel() {
+    document.getElementById("mode-picker").hidden = true;
+    document.getElementById("quiz-form").hidden = false;
+  }
+
+  #handleResult(percentage, level, mode, { shared = false, recordStats = false, submissionId = "", variantIndex } = {}) {
+    this.#resultView.show(percentage, level, mode, { shared, variantIndex });
     this.#resultUrl.sync(this.#resultView.lastResult, this.#i18n.lang);
     this.#meta.setForResult(this.#resultView.lastResult, this.#i18n);
     this.#shareService.hideFeedback();
 
     if (recordStats && submissionId) {
       this.#statsService
-        .record(level, score, submissionId)
+        .record(level, percentage, submissionId)
         .then((recorded) => {
           if (recorded) this.#loadStats();
         })
@@ -178,9 +222,10 @@ export class EitplApp {
     this.#shareService.hideFeedback();
   }
 
+  /** @returns {boolean} whether a shared result was found and restored */
   #restoreFromUrl() {
     const parsed = this.#resultUrl.parse();
-    if (!parsed) return;
+    if (!parsed) return false;
 
     if (parsed.lang && parsed.lang !== this.#i18n.lang) {
       this.#i18n.setLanguage(parsed.lang);
@@ -188,7 +233,12 @@ export class EitplApp {
       this.#applyLanguage(parsed.lang);
     }
 
-    this.#handleResult(parsed.score, parsed.level, { shared: true, variantIndex: parsed.variantIndex });
+    this.#handleResult(parsed.percentage, parsed.level, parsed.mode ?? "express", {
+      shared: true,
+      variantIndex: parsed.variantIndex,
+    });
+    this.#showModePicker();
+    return true;
   }
 
   async #loadStats() {
@@ -243,15 +293,7 @@ export class EitplApp {
       this.#clearResult();
       this.#poolService.resetSession();
       this.#storage.clearAnswers();
-      this.#sessionQuestions = this.#poolService.getSessionQuestions(true);
-      this.#scoring.setQuestions(this.#sessionQuestions);
-      this.#validator.setQuestions(this.#sessionQuestions);
-      this.#quizRenderer.setQuestions(this.#sessionQuestions);
-      this.#quizRenderer.render();
-      this.#validator.clearInvalidMarks();
-      document.getElementById("quiz-hint").hidden = true;
-      this.#progressBar.reset();
-      document.getElementById("quiz")?.scrollIntoView({ behavior: "smooth" });
+      this.#showModePicker();
     });
   }
 }

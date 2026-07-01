@@ -4,10 +4,8 @@ export const STORAGE_KEYS = {
   ANSWERS: "eitpl-answers",
 };
 
-export const MAX_SCORE = 22;
-
-/** Level N if score <= THRESHOLDS[N - 1] */
-export const THRESHOLDS = [4, 9, 13, 17, MAX_SCORE];
+/** Level N if percentage <= PERCENT_THRESHOLDS[N - 1]. Max score varies by quiz mode. */
+export const PERCENT_THRESHOLDS = [20, 40, 60, 80, 100];
 
 export const LEVELS = [
   { id: 1, color: "#22c55e" },
