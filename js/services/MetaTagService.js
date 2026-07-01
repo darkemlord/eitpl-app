@@ -37,7 +37,7 @@ export class MetaTagService {
   }
 
   #ogImage(level) {
-    const file = level > 0 ? `level-${level}.svg` : "default.svg";
+    const file = level > 0 ? `level-${level}.png` : "default.png";
     return new URL(`assets/og/${file}`, this.#assetBase).href;
   }
 
