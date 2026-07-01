@@ -3,10 +3,12 @@
  */
 export class TranslationService {
   #translations;
+  #poolTexts;
   #lang;
 
-  constructor(translations, initialLang) {
+  constructor(translations, poolTexts, initialLang) {
     this.#translations = translations;
+    this.#poolTexts = poolTexts;
     this.#lang = initialLang;
   }
 
@@ -45,5 +47,9 @@ export class TranslationService {
     if (weight >= 3) return 3;
     if (weight >= 2) return 2;
     return 1;
+  }
+
+  questionText(id) {
+    return this.#poolTexts[this.#lang]?.[id] ?? id;
   }
 }

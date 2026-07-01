@@ -18,6 +18,12 @@ export const TRANSLATIONS = {
       disclaimer:
         "*Peer-reviewed por tres ex-compañeros en un bar. Nivel de evidencia: anecdótico pero contundente.",
     },
+    stats: {
+      diagnoses: "diagnósticos",
+      level4Plus: "en nivel 4+",
+      avgScore: "promedio",
+      live: "En vivo",
+    },
     levels: {
       title: "La escala EITPL",
       subtitle: "De manotazo inocente a renuncia cinematográfica",
@@ -143,6 +149,12 @@ export const TRANSLATIONS = {
       disclaimer:
         "*Peer-reviewed by three former coworkers at a bar. Evidence level: anecdotal but devastating.",
     },
+    stats: {
+      diagnoses: "diagnoses",
+      level4Plus: "at level 4+",
+      avgScore: "average",
+      live: "Live",
+    },
     levels: {
       title: "The EITPL Scale",
       subtitle: "From innocent slap to cinematic resignation",
@@ -267,6 +279,12 @@ export const TRANSLATIONS = {
       ctaSecondary: "尺度を見る",
       disclaimer:
         "*居酒屋で元同僚3人がレビュー。エビデンスレベル：逸話的だが説得力あり。",
+    },
+    stats: {
+      diagnoses: "件の診断",
+      level4Plus: "がレベル4+",
+      avgScore: "平均",
+      live: "ライブ",
     },
     levels: {
       title: "EITPL尺度",

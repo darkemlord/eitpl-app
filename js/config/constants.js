@@ -19,20 +19,14 @@ export const LEVELS = [
 
 /**
  * Weights: yes = weight, sometimes = ceil(weight / 2), no = 0
- * @type {ReadonlyArray<{ id: string, weight: number }>}
+ * Question pool lives in js/config/pool/ (100 items, 10 per session).
  */
-export const QUESTIONS = [
-  { id: "q1", weight: 1 },
-  { id: "q2", weight: 3 },
-  { id: "q3", weight: 2 },
-  { id: "q4", weight: 2 },
-  { id: "q5", weight: 2 },
-  { id: "q6", weight: 2 },
-  { id: "q7", weight: 2 },
-  { id: "q8", weight: 2 },
-  { id: "q9", weight: 1 },
-  { id: "q10", weight: 3 },
-  { id: "q11", weight: 2 },
-];
-
 export const ANSWER_VALUES = ["yes", "sometimes", "no"];
+
+/** Live stats — see scripts/stats-ingest.gs for optional Google Apps Script ingest. */
+export const STATS = {
+  publicUrl: "data/stats.json",
+  ingestUrl: "",
+  refreshMs: 60_000,
+  plausibleDomain: "",
+};

@@ -1,5 +1,7 @@
 import { TRANSLATIONS } from "../config/i18n.js";
-import { QUESTIONS, THRESHOLDS } from "../config/constants.js";
+import { THRESHOLDS, STATS } from "../config/constants.js";
+import { POOL_TEXTS } from "../config/pool/texts.js";
+import { QUIZ_LENGTH } from "../config/pool/meta.js";
 import { StorageService } from "../services/StorageService.js";
 import { TranslationService } from "../services/TranslationService.js";
 import { ScoringEngine } from "../services/ScoringEngine.js";
@@ -8,12 +10,15 @@ import { ShareService } from "../services/ShareService.js";
 import { ResultUrlService } from "../services/ResultUrlService.js";
 import { MetaTagService } from "../services/MetaTagService.js";
 import { CertificateService } from "../services/CertificateService.js";
+import { QuestionPoolService } from "../services/QuestionPoolService.js";
+import { StatsService } from "../services/StatsService.js";
 import { I18nBinder } from "../ui/I18nBinder.js";
 import { LevelsRenderer } from "../ui/LevelsRenderer.js";
 import { QuizRenderer } from "../ui/QuizRenderer.js";
 import { ResultView } from "../ui/ResultView.js";
 import { HeaderController } from "../ui/HeaderController.js";
 import { QuizProgressBar } from "../ui/QuizProgressBar.js";
+import { StatsView } from "../ui/StatsView.js";
 import { QuizController } from "../controllers/QuizController.js";
 
 /**
@@ -35,13 +40,20 @@ export class EitplApp {
   #progressBar;
   #quizController;
   #headerController;
+  #statsService;
+  #statsView;
+  #statsTimer;
+  #poolService;
+  #sessionQuestions;
 
   constructor() {
     this.#storage = new StorageService();
-    this.#i18n = new TranslationService(TRANSLATIONS, this.#storage.getLanguage());
+    this.#poolService = new QuestionPoolService();
+    this.#sessionQuestions = this.#poolService.getSessionQuestions();
+    this.#i18n = new TranslationService(TRANSLATIONS, POOL_TEXTS, this.#storage.getLanguage());
     this.#i18nBinder = new I18nBinder(this.#i18n);
-    this.#scoring = new ScoringEngine(QUESTIONS, THRESHOLDS);
-    this.#validator = new QuizValidator(QUESTIONS);
+    this.#scoring = new ScoringEngine(this.#sessionQuestions, THRESHOLDS);
+    this.#validator = new QuizValidator(this.#sessionQuestions);
     this.#resultUrl = new ResultUrlService();
     this.#meta = new MetaTagService();
 
@@ -52,7 +64,7 @@ export class EitplApp {
 
     this.#quizRenderer = new QuizRenderer(
       document.getElementById("questions-container"),
-      QUESTIONS,
+      this.#sessionQuestions,
       this.#i18n,
       this.#storage
     );
@@ -82,7 +94,7 @@ export class EitplApp {
     this.#progressBar = new QuizProgressBar({
       fillEl: document.getElementById("quiz-progress-fill"),
       labelEl: document.getElementById("quiz-progress-label"),
-      total: QUESTIONS.length,
+      total: QUIZ_LENGTH,
       translationService: this.#i18n,
     });
 
@@ -94,14 +106,23 @@ export class EitplApp {
       storageService: this.#storage,
       resultView: this.#resultView,
       quizRenderer: this.#quizRenderer,
-      onSubmit: (payload) => this.#handleResult(payload.score, payload.level, false),
+      onSubmit: (payload) =>
+        this.#handleResult(payload.score, payload.level, {
+          shared: false,
+          recordStats: true,
+          submissionId: payload.submissionId,
+        }),
       onChange: (count) => this.#progressBar.update(count),
     });
 
     this.#headerController = new HeaderController(document.getElementById("site-header"));
+
+    this.#statsService = new StatsService();
+    this.#statsView = new StatsView(document.getElementById("hero-stats"), this.#i18n);
   }
 
   init() {
+    this.#injectPlausible();
     this.#meta.setDefault(this.#i18n);
     this.#applyLanguage(this.#i18n.lang);
     this.#headerController.init();
@@ -110,6 +131,8 @@ export class EitplApp {
     this.#bindResultActions();
     this.#quizController.bind(document.getElementById("questions-container"));
     this.#restoreFromUrl();
+    this.#loadStats();
+    this.#statsTimer = setInterval(() => this.#loadStats(), STATS.refreshMs);
   }
 
   setLanguage(lang) {
@@ -129,13 +152,23 @@ export class EitplApp {
     this.#levelsRenderer.render();
     this.#quizRenderer.render();
     this.#progressBar.update(Object.keys(this.#storage.getAnswers()).length);
+    this.#statsView.refreshLabels();
   }
 
-  #handleResult(score, level, shared) {
+  #handleResult(score, level, { shared = false, recordStats = false, submissionId = "" } = {}) {
     this.#resultView.show(score, level, { shared });
     this.#resultUrl.sync(this.#resultView.lastResult, this.#i18n.lang);
     this.#meta.setForResult(this.#resultView.lastResult, this.#i18n);
     this.#shareService.hideFeedback();
+
+    if (recordStats && submissionId) {
+      this.#statsService
+        .record(level, score, submissionId)
+        .then((recorded) => {
+          if (recorded) this.#loadStats();
+        })
+        .catch(() => {});
+    }
   }
 
   #clearResult() {
@@ -155,7 +188,27 @@ export class EitplApp {
       this.#applyLanguage(parsed.lang);
     }
 
-    this.#handleResult(parsed.score, parsed.level, true);
+    this.#handleResult(parsed.score, parsed.level, { shared: true });
+  }
+
+  async #loadStats() {
+    try {
+      const data = await this.#statsService.fetch();
+      this.#statsView.render(this.#statsService.aggregate(data));
+    } catch {
+      this.#statsView.hide();
+    }
+  }
+
+  #injectPlausible() {
+    if (!STATS.plausibleDomain || document.querySelector("[data-plausible]")) return;
+
+    const script = document.createElement("script");
+    script.defer = true;
+    script.dataset.domain = STATS.plausibleDomain;
+    script.dataset.plausible = "true";
+    script.src = "https://plausible.io/js/script.js";
+    document.head.appendChild(script);
   }
 
   #bindNavigation() {
@@ -188,7 +241,12 @@ export class EitplApp {
 
     document.getElementById("btn-retry")?.addEventListener("click", () => {
       this.#clearResult();
+      this.#poolService.resetSession();
       this.#storage.clearAnswers();
+      this.#sessionQuestions = this.#poolService.getSessionQuestions(true);
+      this.#scoring.setQuestions(this.#sessionQuestions);
+      this.#validator.setQuestions(this.#sessionQuestions);
+      this.#quizRenderer.setQuestions(this.#sessionQuestions);
       this.#quizRenderer.render();
       this.#validator.clearInvalidMarks();
       document.getElementById("quiz-hint").hidden = true;

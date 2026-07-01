@@ -8,6 +8,10 @@ export class QuizValidator {
     this.#questions = questions;
   }
 
+  setQuestions(questions) {
+    this.#questions = questions;
+  }
+
   collectFromDom() {
     const answers = {};
     let allAnswered = true;

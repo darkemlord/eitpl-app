@@ -16,8 +16,11 @@ export class QuizRenderer {
     this.#storage = storageService;
   }
 
+  setQuestions(questions) {
+    this.#questions = questions;
+  }
+
   render() {
-    const items = this.#i18n.t("quiz.items");
     const opts = this.#i18n.t("quiz.options");
     const saved = this.#storage.getAnswers();
 
@@ -36,7 +39,7 @@ export class QuizRenderer {
             <span class="severity-badge severity-badge--${tier}">
               ${this.#i18n.t("quiz.severityPrefix")} ${this.#i18n.severityLabel(q.weight)}
             </span>
-            <p class="question-text" id="${q.id}-label">${items[i]}</p>
+            <p class="question-text" id="${q.id}-label">${this.#i18n.questionText(q.id)}</p>
           </div>
           <div class="options-group" role="radiogroup" aria-labelledby="${q.id}-label"></div>
         </div>

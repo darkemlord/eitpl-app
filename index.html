@@ -53,6 +53,25 @@
         <p class="hero-subtitle" data-i18n="hero.subtitle">
           Herramienta científica y rigurosa para determinar cuándo tu laburo se pasó de la raya
         </p>
+        <div class="hero-stats card-surface" id="hero-stats" hidden aria-live="polite">
+          <div class="hero-stats-grid">
+            <div class="hero-stats-item">
+              <span class="hero-stats-value" data-stat="total">—</span>
+              <span class="hero-stats-label" data-i18n="stats.diagnoses">diagnósticos</span>
+            </div>
+            <div class="hero-stats-divider" aria-hidden="true"></div>
+            <div class="hero-stats-item">
+              <span class="hero-stats-value hero-stats-value-accent" data-stat="level4">—</span>
+              <span class="hero-stats-label" data-i18n="stats.level4Plus">en nivel 4+</span>
+            </div>
+            <div class="hero-stats-divider" aria-hidden="true"></div>
+            <div class="hero-stats-item">
+              <span class="hero-stats-value" data-stat="avg">—</span>
+              <span class="hero-stats-label" data-i18n="stats.avgScore">promedio</span>
+            </div>
+          </div>
+          <span class="hero-stats-live" data-stat="live" data-i18n="stats.live">En vivo</span>
+        </div>
         <div class="hero-actions">
           <button type="button" class="btn btn-primary btn-lg" id="btn-start" data-i18n="hero.cta">
             Hacer el diagnóstico
@@ -90,7 +109,7 @@
             <div class="quiz-progress-track">
               <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
             </div>
-            <span class="quiz-progress-label" id="quiz-progress-label">0 de 11 respondidas</span>
+            <span class="quiz-progress-label" id="quiz-progress-label">0 de 10 respondidas</span>
           </div>
           <div id="questions-container" class="questions-container"></div>
           <div class="quiz-actions">

@@ -16,6 +16,10 @@ export class ScoringEngine {
     return this.#questions;
   }
 
+  setQuestions(questions) {
+    this.#questions = questions;
+  }
+
   get maxScore() {
     return MAX_SCORE;
   }

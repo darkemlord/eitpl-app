@@ -1,3 +1,9 @@
 # Local-only (no subir a GitHub)
 ROADMAP.local.md
 .DS_Store
+
+# E2E / Node
+node_modules/
+test-results/
+playwright-report/
+package-lock.json
