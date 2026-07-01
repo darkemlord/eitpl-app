@@ -43,17 +43,17 @@ export const TRANSLATIONS = {
           action: "Mirá LinkedIn de reojo. Solo de reojo, eh.",
         },
         {
-          name: "La Maniobra del Tío Raro",
+          name: "La Manoseada del Tío Raro",
           desc: "Te reasignaron sin avisar y tu nuevo título quedó flotando en el limbo corporativo.",
           action: "CV actualizado YA. Sin gracia, en serio.",
         },
         {
-          name: "El Exprimidor Industrial",
+          name: "El Exprimidor Industrial Sin Anestesia",
           desc: "Te bajaron de nivel con un PowerPoint de montañas, gráficos ascendentes y la sonrisa de RRHH más falsa del mundo.",
           action: "Mandá CVs como si fuera spam de Black Friday.",
         },
         {
-          name: "El Full Garra Rufa Certificado",
+          name: "La Prensa Hidráulica de Huevos",
           desc: "Te bajaron sueldo y nivel, te cobran hasta los errores del lead, prometen un ascenso que nunca llega, y ENCIMA te piden organizar tu propia despedida.",
           action: "RENUNCIÁ EL VIERNES CON GAFAS OSCURAS. Sin excepciones.",
         },
@@ -224,17 +224,17 @@ export const TRANSLATIONS = {
           action: "Glance at LinkedIn. Just a glance, though.",
         },
         {
-          name: "The Weird Uncle Maneuver",
+          name: "The Weird Uncle's Full Grope",
           desc: "They reassigned you with zero warning and your new title is floating in corporate limbo.",
           action: "Update your résumé NOW. Not funny anymore.",
         },
         {
-          name: "The Industrial Juicer",
+          name: "The Industrial Juicer, No Anesthesia",
           desc: "Demoted via a mountain-climbing PowerPoint, upward-trending charts, and the fakest HR smile in existence.",
           action: "Spam your résumé like it's Black Friday.",
         },
         {
-          name: "Full Certified Garra Rufa",
+          name: "The Hydraulic Nut Press",
           desc: "Pay cut, level drop, blamed for the lead's mistakes, a promotion that never comes, AND they asked you to plan your own farewell party.",
           action: "RESIGN FRIDAY WITH SUNGLASSES. No exceptions.",
         },
@@ -405,17 +405,17 @@ export const TRANSLATIONS = {
           action: "LinkedInをチラ見。あくまでチラ見で。",
         },
         {
-          name: "怪しいおじさんの手口",
+          name: "怪しいおじさんの本気タッチ",
           desc: "予告なく異動になり、新しい肩書きは会社の闇に消えた。",
           action: "今すぐ履歴書更新。もう笑えない。",
         },
         {
-          name: "工業用絞り器",
+          name: "工業用絞り器（麻酔なし）",
           desc: "山登りメタファーのPowerPoint、右肩上がりのグラフ、そして人事の作り笑顔でグレードダウン。",
           action: "ブラックフライデー並みに履歴書をスパム送信。",
         },
         {
-          name: "ガラルーファ完全認定",
+          name: "水圧プレスで金的直撃",
           desc: "降給、降格、リードのミスまで押し付けられ、幻の昇進を待たされ、おまけに送別会の幹事まで任される。",
           action: "サングラスをかけて金曜に退職。例外なし。",
         },
