@@ -4,7 +4,7 @@ export const TRANSLATIONS = {
       title: "EITPL — Escala Internacional de Tocada de Pelotas Laboral",
       titleShort: "EITPL",
       description: "Herramienta científica para medir cuánto te están tocando las pelotas en el laburo.",
-      ogDescription: "Descubrí tu nivel. Compartí tu diagnóstico. Renunciá el viernes con gafas oscuras.",
+      ogDescription: "Descubrí tu nivel. Compartí tu diagnóstico. Preparate para tu renuncia cinematográfica.",
     },
     hero: {
       badgeLabel: "Metodología peer-reviewed*",
@@ -55,7 +55,7 @@ export const TRANSLATIONS = {
         {
           name: "La Prensa Hidráulica de Huevos",
           desc: "Te bajaron sueldo y nivel, te cobran hasta los errores del lead, prometen un ascenso que nunca llega, y ENCIMA te piden organizar tu propia despedida.",
-          action: "RENUNCIÁ EL VIERNES CON GAFAS OSCURAS. Sin excepciones.",
+          action: "ARMÁ TU RENUNCIA CINEMATOGRÁFICA. Cámara lenta obligatoria.",
         },
       ],
     },
@@ -128,7 +128,7 @@ export const TRANSLATIONS = {
           "Nivel 4 es la antesala. Lo que sigue ya lo sabés, solo falta la fecha.",
         ],
         [
-          "La ciencia ha hablado. No hay nada más que analizar. Gafas oscuras, carta de renuncia impresa, y el viernes te presentás con la cabeza en alto.",
+          "La ciencia ha hablado. No hay nada más que analizar. Armá tu salida en cámara lenta, con explosión de fondo incluida (metafórica, por favor).",
           "Nivel 5 confirmado. A esta altura ya sos más leyenda de oficina que empleado.",
           "Esto no es un mal momento laboral, es un evento histórico. Andate con la frente marcada y el ego intacto.",
           "Certificado, sellado y con moño: sos el caso de estudio de la próxima charla de bienestar laboral. Andate ya.",
@@ -160,7 +160,7 @@ export const TRANSLATIONS = {
           "Acción recomendada: empezá a despedirte de a poco, sin drama, sin aviso.",
         ],
         [
-          "Acción recomendada: renunciá el viernes con gafas oscuras. Sin excepciones. ★",
+          "Acción recomendada: transformá tu renuncia en el final de una película de acción. ★",
           "Acción recomendada: escribí el discurso de despedida. Guionado, con clímax y todo. ★",
           "Acción recomendada: brindá con lo que tengas a mano. Esto se terminó. ★",
           "Acción recomendada: avisale a tu familia que el domingo hay asado de festejo. ★",
@@ -185,7 +185,7 @@ export const TRANSLATIONS = {
       title: "EITPL — International Workplace Ball-Touching Scale",
       titleShort: "EITPL",
       description: "Scientific tool to measure how much your job is crossing the line.",
-      ogDescription: "Find your level. Share your diagnosis. Resign on Friday with sunglasses.",
+      ogDescription: "Find your level. Share your diagnosis. Get ready for your cinematic resignation.",
     },
     hero: {
       badgeLabel: "Peer-reviewed methodology*",
@@ -236,7 +236,7 @@ export const TRANSLATIONS = {
         {
           name: "The Hydraulic Nut Press",
           desc: "Pay cut, level drop, blamed for the lead's mistakes, a promotion that never comes, AND they asked you to plan your own farewell party.",
-          action: "RESIGN FRIDAY WITH SUNGLASSES. No exceptions.",
+          action: "STAGE YOUR CINEMATIC RESIGNATION. Slow motion mandatory.",
         },
       ],
     },
@@ -309,7 +309,7 @@ export const TRANSLATIONS = {
           "Level 4 is the prelude. You know what's next — you just don't have the date yet.",
         ],
         [
-          "Science has spoken. Nothing left to analyze. Sunglasses on, resignation letter printed, walk in Friday with your head held high.",
+          "Science has spoken. Nothing left to analyze. Walk out in slow motion, background explosion optional (metaphorical, please).",
           "Level 5 confirmed. At this point you're more office legend than employee.",
           "This isn't a bad work moment, it's a historic event. Walk out proud, ego fully intact.",
           "Certified, sealed, and gift-wrapped: you're the case study for the next wellness workshop. Leave. Now.",
@@ -341,7 +341,7 @@ export const TRANSLATIONS = {
           "Recommended action: start saying goodbye quietly, no drama, no notice.",
         ],
         [
-          "Recommended action: RESIGN FRIDAY WITH SUNGLASSES. No exceptions. ★",
+          "Recommended action: turn your resignation into the finale of an action movie. ★",
           "Recommended action: write the farewell speech. Full script, with a climax. ★",
           "Recommended action: toast with whatever's on hand. This is over. ★",
           "Recommended action: tell your family Sunday's barbecue is a celebration. ★",
@@ -366,7 +366,7 @@ export const TRANSLATIONS = {
       title: "EITPL — 国際職場ボールタッチング尺度",
       titleShort: "EITPL",
       description: "職場のボールタッチングレベルを測る科学的（？）ツール。",
-      ogDescription: "レベルを診断して、結果をシェア。サングラスをかけて金曜退職。",
+      ogDescription: "レベルを診断して、結果をシェア。映画みたいな退職の準備をしよう。",
     },
     hero: {
       badgeLabel: "ピアレビュー済み*",
@@ -417,7 +417,7 @@ export const TRANSLATIONS = {
         {
           name: "水圧プレスで金的直撃",
           desc: "降給、降格、リードのミスまで押し付けられ、幻の昇進を待たされ、おまけに送別会の幹事まで任される。",
-          action: "サングラスをかけて金曜に退職。例外なし。",
+          action: "映画みたいな退職を演出しよう。スローモーション必須。",
         },
       ],
     },
@@ -490,7 +490,7 @@ export const TRANSLATIONS = {
           "レベル4は前兆。次に来るのはわかってる、日付が決まってないだけ。",
         ],
         [
-          "科学が語った。分析の余地なし。サングラスをかけ、退職届を印刷し、金曜日は堂々と出社。",
+          "科学が語った。分析の余地なし。スローモーションで退場、背景で何か爆発してもいい（比喩的に、お願いします）。",
           "レベル5確定。もはや社員というより社内伝説。",
           "これはただの悪い日じゃない、歴史的事件。誇り高く、プライドはそのままに去ろう。",
           "認定済み、封印済み、リボン付き：次の福利厚生研修のケーススタディはあなたです。今すぐ去りましょう。",
@@ -522,7 +522,7 @@ export const TRANSLATIONS = {
           "推奨アクション：静かに、ドラマなく、予告なく別れの準備を。",
         ],
         [
-          "推奨アクション：サングラスをかけて金曜退職。例外なし。★",
+          "推奨アクション：退職をアクション映画のクライマックスにしよう。★",
           "推奨アクション：送別スピーチを書く。台本付き、クライマックスあり。★",
           "推奨アクション：手元にあるもので乾杯。これで終わり。★",
           "推奨アクション：日曜は祝勝会だと家族に伝える。★",
