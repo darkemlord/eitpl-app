@@ -588,15 +588,17 @@ img {
 
 .level-card-badge {
   position: absolute;
-  top: 0.75rem;
-  right: -1.5rem;
+  top: 1.6rem;
+  right: -3.4rem;
+  width: 12rem;
   background: var(--accent);
   color: #fff;
   font-size: 0.625rem;
   font-weight: 700;
-  padding: 0.2rem 1.5rem;
+  padding: 0.3rem 0;
   transform: rotate(45deg);
   letter-spacing: 0.05em;
+  text-align: center;
 }
 
 /* ── Mode picker ── */
