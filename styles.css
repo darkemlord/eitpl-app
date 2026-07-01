@@ -733,11 +733,15 @@ img {
 .question-row {
   display: grid;
   grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr auto;
   grid-template-areas:
     "num body"
+    ".   .   "
     "options options";
   gap: 1rem;
   align-items: start;
+  flex: 1;
+  min-height: 0;
 }
 
 .question-number {
@@ -1140,8 +1144,8 @@ img {
 
   .questions-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    align-items: start;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: stretch;
   }
 }
 
