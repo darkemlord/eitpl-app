@@ -1,26 +1,29 @@
 /** @readonly */
 export const POOL_SIZE = 100;
 export const QUIZ_LENGTH = 10;
-export const ANCHOR_IDS = ["q002", "q003", "q007", "q010"];
-export const SESSION_MAX_SCORE = 22;
-
-/** Random slot weight budget: 6 questions must sum to this (anchors sum to 11) */
-export const RANDOM_WEIGHT_BUDGET = 11;
 
 /**
- * @type {ReadonlyArray<{ id: string, weight: 1|2|3, anchor?: boolean, category: string, tags?: string[] }>}
+ * Weight slots for the 10 session questions (sum = 22, matches MAX_SCORE).
+ * No fixed question IDs — the balance is by severity tier, not by identity,
+ * so every session pulls fresh questions while staying comparable to others.
+ */
+export const SESSION_SLOTS = [3, 3, 3, 3, 2, 2, 2, 2, 1, 1];
+export const SESSION_WEIGHT_BUDGET = SESSION_SLOTS.reduce((sum, w) => sum + w, 0);
+
+/**
+ * @type {ReadonlyArray<{ id: string, weight: 1|2|3, category: string, tags?: string[] }>}
  */
 export const QUESTION_POOL = [
   { id: "q001", weight: 1, category: "culture", tags: ["ppt", "montana"] },
-  { id: "q002", weight: 3, anchor: true, category: "comp", tags: ["pip", "downgrade"] },
-  { id: "q003", weight: 3, anchor: true, category: "leadership", tags: ["promesa", "ascenso"] },
+  { id: "q002", weight: 3, category: "comp", tags: ["pip", "downgrade"] },
+  { id: "q003", weight: 3, category: "leadership", tags: ["promesa", "ascenso"] },
   { id: "q004", weight: 2, category: "politics", tags: ["evaluacion", "doble"] },
   { id: "q005", weight: 1, category: "leadership", tags: ["openbar", "offsite"] },
   { id: "q006", weight: 2, category: "workload", tags: ["evento", "recorte"] },
-  { id: "q007", weight: 2, anchor: true, category: "comp", tags: ["grading", "techo"] },
+  { id: "q007", weight: 2, category: "comp", tags: ["grading", "techo"] },
   { id: "q008", weight: 1, category: "leadership", tags: ["1on1", "apoyo"] },
   { id: "q009", weight: 2, category: "hr", tags: ["grading", "niveles"] },
-  { id: "q010", weight: 3, anchor: true, category: "hr", tags: ["subnivel", "estancamiento"] },
+  { id: "q010", weight: 3, category: "hr", tags: ["subnivel", "estancamiento"] },
   { id: "q011", weight: 1, category: "politics", tags: ["whatsapp", "rumor"] },
   { id: "q012", weight: 2, category: "remote", tags: ["rto", "mandato"] },
   { id: "q013", weight: 3, category: "tech", tags: ["oncall", "weekend"] },

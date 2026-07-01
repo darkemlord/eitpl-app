@@ -65,7 +65,6 @@ export class QuizController {
 
     const score = this.#scoring.calculate(answers);
     const level = this.#scoring.levelFromScore(score);
-    this.#resultView.show(score, level);
     this.#onSubmit?.({ score, level, answers, submissionId: String(Date.now()) });
   }
 

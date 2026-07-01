@@ -74,13 +74,8 @@ test.describe("EITPL smoke e2e", () => {
     expect(url.searchParams.get("lang")).toBe("es");
   });
 
-  test("anchor questions always appear in session", async ({ page }) => {
-    const anchorSnippets = [
-      "bajaron de nivel o de sueldo",
-      "ascenso que lleva más de 6 meses",
-      "techo de tu propio nivel",
-      "más de 3 meses sin poder subir",
-    ];
+  test("session always keeps a 4/4/2 severity mix, with varying questions", async ({ page }) => {
+    const seenAcrossRuns = new Set();
 
     for (let run = 0; run < 3; run++) {
       await page.evaluate(() => {
@@ -90,11 +85,21 @@ test.describe("EITPL smoke e2e", () => {
       await page.reload();
       await page.locator("#btn-start").click();
 
-      const text = await page.locator("#questions-container").innerText();
-      for (const snippet of anchorSnippets) {
-        expect(text.toLowerCase()).toContain(snippet);
-      }
+      const [grave, moderado, leve] = await Promise.all([
+        page.locator(".severity-badge--3").count(),
+        page.locator(".severity-badge--2").count(),
+        page.locator(".severity-badge--1").count(),
+      ]);
+      expect(grave).toBe(4);
+      expect(moderado).toBe(4);
+      expect(leve).toBe(2);
+
+      const texts = await page.locator(".question-text").allTextContents();
+      texts.forEach((t) => seenAcrossRuns.add(t));
     }
+
+    // With no fixed anchor questions, 3 sessions should surface more than 10 distinct questions.
+    expect(seenAcrossRuns.size).toBeGreaterThan(10);
   });
 
   test("retry resets quiz with 10 new random questions", async ({ page }) => {

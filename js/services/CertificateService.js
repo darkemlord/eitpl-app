@@ -67,7 +67,7 @@ export class CertificateService {
 
     ctx.fillStyle = "#908fa0";
     ctx.font = "400 32px Inter, system-ui, sans-serif";
-    this.#wrapText(ctx, `"${this.#i18n.t("result.messages")[idx]}"`, w / 2, 520, w - 200, 42);
+    this.#wrapText(ctx, `"${result.message}"`, w / 2, 520, w - 200, 42);
 
     ctx.fillStyle = "#6366f1";
     ctx.font = "800 48px Inter, system-ui, sans-serif";

@@ -21,14 +21,18 @@ Vanilla JS con ES modules (sin bundler, sin build step) siguiendo SOLID:
 ### Pool de preguntas (importante para no romper el scoring)
 
 - 100 preguntas en `QUESTION_POOL` (`js/config/pool/meta.js`), cada una con `weight` 1/2/3.
-- Cada sesión usa 10: 4 "anclas" fijas (`ANCHOR_IDS`, suman peso 11) + 6 random
-  elegidas por `QuestionPoolService` respetando slots de peso `[3,2,2,2,1,1]`
-  (suman 11). Esto garantiza que el score máximo sea **siempre 22**
-  (`MAX_SCORE`/`THRESHOLDS` en `constants.js`) sin importar qué random toque.
-- Si tocás el pool o los slots, verificá que la distribución de pesos no-ancla
-  siga teniendo stock suficiente para los slots (hoy: 30×peso1, 44×peso2, 22×peso3).
+- Cada sesión usa 10 preguntas **sin ningún ID fijo**: `QuestionPoolService` arma
+  la sesión respetando slots de severidad `SESSION_SLOTS = [3,3,3,3,2,2,2,2,1,1]`
+  (4 graves + 4 moderadas + 2 leves, suman 22). Esto garantiza que el score
+  máximo sea **siempre 22** (`MAX_SCORE`/`THRESHOLDS` en `constants.js`) y que
+  la severidad esté balanceada, sin repetir nunca las mismas preguntas por ID.
+- Si tocás el pool o los slots, verificá que la distribución de pesos completa
+  siga teniendo stock suficiente para los slots (hoy: 30×peso1, 45×peso2, 25×peso3).
 - Los textos de las 100 preguntas deben existir en `texts.es.js`, `texts.en.js`
   y `texts.ja.js` — sin huecos. Mismo criterio para las claves de `i18n.js`.
+- `result.messages`/`result.actions` en `i18n.js` son arrays de variantes por
+  nivel (no un string único): `ResultView.show()` elige una al azar y la
+  persiste en la URL compartida (`?m=`) para que el link reproduzca el mismo chiste.
 
 ## Comandos
 

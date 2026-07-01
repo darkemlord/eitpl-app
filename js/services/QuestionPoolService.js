@@ -1,17 +1,11 @@
-import {
-  ANCHOR_IDS,
-  QUESTION_POOL,
-  QUIZ_LENGTH,
-  RANDOM_WEIGHT_BUDGET,
-} from "../config/pool/meta.js";
+import { QUESTION_POOL, QUIZ_LENGTH, SESSION_SLOTS, SESSION_WEIGHT_BUDGET } from "../config/pool/meta.js";
 
 const STORAGE_KEY = "eitpl-session-questions";
 
-/** Weight slots for the 6 random picks (sum = RANDOM_WEIGHT_BUDGET). */
-const RANDOM_SLOTS = [3, 2, 2, 2, 1, 1];
-
 /**
- * Picks anchor + stratified random questions for one quiz session (SRP).
+ * Picks a fresh stratified-random set of questions for one quiz session (SRP).
+ * No question is ever pinned by ID — the severity mix (weight distribution)
+ * stays constant across sessions so every diagnosis is comparable.
  */
 export class QuestionPoolService {
   #poolById;
@@ -48,25 +42,20 @@ export class QuestionPoolService {
 
   #pickQuestions() {
     for (let attempt = 0; attempt < 50; attempt++) {
-      const random = this.#pickRandomSet();
-      if (random) {
-        const anchors = ANCHOR_IDS.map((id) => this.#poolById.get(id)).filter(Boolean);
-        return this.#shuffle([...anchors, ...random]);
-      }
+      const picked = this.#pickBySlots();
+      if (picked) return this.#shuffle(picked);
     }
 
     return this.#fallback();
   }
 
-  #pickRandomSet() {
-    const anchors = new Set(ANCHOR_IDS);
-    const pool = QUESTION_POOL.filter((q) => !anchors.has(q.id));
-    const slots = this.#shuffle([...RANDOM_SLOTS]);
+  #pickBySlots() {
+    const slots = this.#shuffle([...SESSION_SLOTS]);
     const picked = [];
     const used = new Set();
 
     for (const weight of slots) {
-      const options = pool.filter((q) => q.weight === weight && !used.has(q.id));
+      const options = QUESTION_POOL.filter((q) => q.weight === weight && !used.has(q.id));
       if (!options.length) return null;
       const choice = options[Math.floor(Math.random() * options.length)];
       used.add(choice.id);
@@ -74,13 +63,11 @@ export class QuestionPoolService {
     }
 
     const sum = picked.reduce((acc, q) => acc + q.weight, 0);
-    return sum === RANDOM_WEIGHT_BUDGET ? picked : null;
+    return sum === SESSION_WEIGHT_BUDGET ? picked : null;
   }
 
   #fallback() {
-    const anchors = ANCHOR_IDS.map((id) => this.#poolById.get(id)).filter(Boolean);
-    const rest = QUESTION_POOL.filter((q) => !q.anchor).slice(0, QUIZ_LENGTH - anchors.length);
-    return [...anchors, ...rest];
+    return this.#shuffle([...QUESTION_POOL]).slice(0, QUIZ_LENGTH);
   }
 
   #shuffle(items) {

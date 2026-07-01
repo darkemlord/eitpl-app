@@ -1,6 +1,6 @@
 /**
  * Result panel presentation (SRP).
- * @typedef {{ score: number, level: number, name: string, message: string }} QuizResult
+ * @typedef {{ score: number, level: number, name: string, message: string, action: string, variantIndex: number }} QuizResult
  */
 export class ResultView {
   #els;
@@ -16,17 +16,23 @@ export class ResultView {
     return this.#lastResult;
   }
 
-  show(score, level, { shared = false } = {}) {
+  show(score, level, { shared = false, variantIndex } = {}) {
     const items = this.#i18n.t("levels.items");
-    const messages = this.#i18n.t("result.messages");
-    const actions = this.#i18n.t("result.actions");
+    const messagePool = this.#i18n.t("result.messages")[level - 1];
+    const actionPool = this.#i18n.t("result.actions")[level - 1];
     const idx = level - 1;
+
+    const chosen = messagePool[variantIndex] !== undefined
+      ? variantIndex
+      : Math.floor(Math.random() * messagePool.length);
 
     this.#lastResult = {
       score,
       level,
       name: items[idx].name,
-      message: messages[idx],
+      message: messagePool[chosen],
+      action: actionPool[chosen] ?? actionPool[0],
+      variantIndex: chosen,
     };
 
     const { resultSection, resultCard, resultLevel, resultName, resultMessage, resultAction, resultScoreValue, sharedBanner } =
@@ -36,8 +42,8 @@ export class ResultView {
     resultCard.classList.toggle("shake", level === 5);
     resultLevel.innerHTML = `${this.#i18n.t("result.levelIntro")} <span>${this.#i18n.t("levels.colLevel")} ${level}</span>`;
     resultName.textContent = items[idx].name;
-    resultMessage.textContent = `"${messages[idx]}"`;
-    resultAction.textContent = actions[idx];
+    resultMessage.textContent = `"${this.#lastResult.message}"`;
+    resultAction.textContent = this.#lastResult.action;
     resultScoreValue.textContent = score;
 
     if (sharedBanner) {

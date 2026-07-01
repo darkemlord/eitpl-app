@@ -21,18 +21,15 @@ export class MetaTagService {
   }
 
   setForResult(result, i18n) {
-    const items = i18n.t("levels.items");
-    const messages = i18n.t("result.messages");
-    const idx = result.level - 1;
-    const title = `${i18n.t("meta.titleShort")} — ${i18n.t("levels.colLevel")} ${result.level}: ${items[idx].name}`;
+    const title = `${i18n.t("meta.titleShort")} — ${i18n.t("levels.colLevel")} ${result.level}: ${result.name}`;
 
     document.title = title;
-    this.#set("description", messages[idx]);
+    this.#set("description", result.message);
     this.#set("og:title", title, "property");
-    this.#set("og:description", messages[idx], "property");
+    this.#set("og:description", result.message, "property");
     this.#set("og:image", this.#ogImage(result.level), "property");
     this.#set("twitter:title", title);
-    this.#set("twitter:description", messages[idx]);
+    this.#set("twitter:description", result.message);
     this.#set("twitter:image", this.#ogImage(result.level));
   }
 

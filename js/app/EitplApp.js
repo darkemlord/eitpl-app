@@ -142,7 +142,7 @@ export class EitplApp {
 
     const last = this.#resultView.lastResult;
     if (last) {
-      this.#handleResult(last.score, last.level, { shared: false });
+      this.#handleResult(last.score, last.level, { shared: false, variantIndex: last.variantIndex });
     }
   }
 
@@ -155,8 +155,8 @@ export class EitplApp {
     this.#statsView.refreshLabels();
   }
 
-  #handleResult(score, level, { shared = false, recordStats = false, submissionId = "" } = {}) {
-    this.#resultView.show(score, level, { shared });
+  #handleResult(score, level, { shared = false, recordStats = false, submissionId = "", variantIndex } = {}) {
+    this.#resultView.show(score, level, { shared, variantIndex });
     this.#resultUrl.sync(this.#resultView.lastResult, this.#i18n.lang);
     this.#meta.setForResult(this.#resultView.lastResult, this.#i18n);
     this.#shareService.hideFeedback();
@@ -188,7 +188,7 @@ export class EitplApp {
       this.#applyLanguage(parsed.lang);
     }
 
-    this.#handleResult(parsed.score, parsed.level, { shared: true });
+    this.#handleResult(parsed.score, parsed.level, { shared: true, variantIndex: parsed.variantIndex });
   }
 
   async #loadStats() {
