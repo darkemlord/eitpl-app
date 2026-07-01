@@ -1,11 +1,15 @@
 {
   "name": "eitpl-app",
   "private": true,
+  "type": "module",
   "scripts": {
+    "test:unit": "node --test",
     "test:e2e": "playwright test",
+    "test": "npm run test:unit && npm run test:e2e",
     "serve": "python3 -m http.server 8765"
   },
   "devDependencies": {
-    "@playwright/test": "^1.51.0"
+    "@playwright/test": "^1.51.0",
+    "jsdom": "^29.1.1"
   }
 }
